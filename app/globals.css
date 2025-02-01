@@ -19,3 +19,13 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Add this CSS in your styles or in a global stylesheet */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-width: none;      /* For Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;             /* For Chrome, Safari, and Opera */
+}
