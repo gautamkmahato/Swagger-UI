@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react'
 import Test from '../_components/Test'
 import fetchJsonData from '../actions/fetchJsonData'
 
-interface PageProps {
-    params: { docId: string }
-    searchParams?: { [key: string]: string | string[] | undefined }
+interface JsonDataResponse {
+  openapi_schema: string
+  [key: string]: any
 }
 
-export default function Documentation({ params }: PageProps) {
+export default function Documentation({ params }: { params: { docId: string } }) {
     const { docId } = params
     const [checkDocIdStatus, setCheckDocIdStatus] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -18,15 +18,18 @@ export default function Documentation({ params }: PageProps) {
 
     useEffect(() => {
         async function getJsonData() {
-            // call the fetchJsonData function to check if the docId has jsonData or not
             setLoading(true)
-            const jsonData = await fetchJsonData(docId)
-            if (jsonData[0].openapi_schema) {
-                setCheckDocIdStatus(true)
-                setLoading(false)
-                setApiData(jsonData[0].openapi_schema)
-            } else {
-                setErrorMessage(`Please upload the JSON data:`)
+            try {
+                const jsonData = await fetchJsonData(docId) as JsonDataResponse[]
+                if (jsonData[0]?.openapi_schema) {
+                    setCheckDocIdStatus(true)
+                    setApiData(jsonData[0].openapi_schema)
+                } else {
+                    setErrorMessage("Please upload the JSON data:")
+                }
+            } catch (error) {
+                setErrorMessage("Failed to fetch documentation data")
+            } finally {
                 setLoading(false)
             }
         }
@@ -34,21 +37,17 @@ export default function Documentation({ params }: PageProps) {
     }, [docId])
 
     if (loading) {
-        return (
-            <>
-                <h1>Loading...</h1>
-            </>
-        )
+        return <h1>Loading...</h1>
     }
 
     return (
         <>
             {errorMessage && <h1>{errorMessage}</h1>}
-            {checkDocIdStatus ? <Test apiData={apiData} docId={docId} /> : 
-                <>
-                    <h1>No Data available</h1>
-                </>
-            }
+            {checkDocIdStatus ? (
+                <Test apiData={apiData} docId={docId} />
+            ) : (
+                <h1>No Data available</h1>
+            )}
         </>
     )
 }
