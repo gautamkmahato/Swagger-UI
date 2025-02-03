@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react';
 import Test from '../_components/Test';
 import fetchJsonData from '../actions/fetchJsonData';
 
-interface DocumentationProps {
-  docId: string;
-}
-
+// Interface for JsonData response structure
 interface JsonData {
   openapi_schema?: Record<string, any>; // JSON object
 }
 
-export default function Documentation({ docId }: DocumentationProps) {
+export default function Documentation() {
+  // Extract docId from the URL params (Assuming docId is part of the URL)
+  const docId = window.location.pathname.split('/').pop() as string;
+
   const [checkDocIdStatus, setCheckDocIdStatus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
