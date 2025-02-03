@@ -8,57 +8,49 @@ import { useEffect, useState } from 'react';
 import fetchProjects from '../actions/fetchProjects';
 import { useUser } from '@clerk/nextjs';
 
-interface Project {
-  project_id: string;
-  project_name: string;
-  description: string;
-  created_at: string;
-}
-
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { isSignedIn, user, isLoaded } = useUser();
+
+  console.log(user)
 
   // Fetch projects on component mount
   useEffect(() => {
     async function getAllProjects() {
-      if (!user || !user.id) return; // Ensure user.id is available before proceeding
       setLoading(true);
       try {
-        const result: Project[] = await fetchProjects(user.id); // Fetch projects using the authenticated user id
+        const result = await fetchProjects(user.id);
+        console.log(result)
         if (result) {
           setProjects(result);
         } else {
-          setErrorMessage('Error fetching Projects');
+          setErrorMessage('Error in fetching Projects');
         }
       } catch (error) {
-        setErrorMessage(`Error: ${(error as Error).message}`);
+        setErrorMessage(`Error: ${error.message}`);
       } finally {
         setLoading(false);
       }
     }
-    if (isLoaded && isSignedIn) {
-      getAllProjects();
-    }
-  }, [user, isLoaded, isSignedIn]); // Depend on user, isLoaded, and isSignedIn
+    getAllProjects();
+  }, []);
 
   // Function to refresh the projects list
   const refreshProjects = async () => {
-    if (!user || !user.id) return; // Ensure user.id is available before proceeding
     setLoading(true);
     try {
-      const result: Project[] = await fetchProjects(user.id); // Fetch projects using the authenticated user id
+      const result = await fetchProjects(user.id);
       if (result) {
         setProjects(result);
       } else {
-        setErrorMessage('Error fetching Projects');
+        setErrorMessage('Error in fetching Projects');
       }
     } catch (error) {
-      setErrorMessage(`Error: ${(error as Error).message}`);
+      setErrorMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -69,7 +61,7 @@ export default function ProjectsPage() {
   }
 
   if (!isSignedIn) {
-    return <div>Please sign in to view this page</div>;
+    return <div>Sign in to view this page</div>
   }
 
   return (
@@ -82,21 +74,19 @@ export default function ProjectsPage() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(!isModalOpen)} // Toggle modal state
         >
-          {user && (
-            <Form
-              onFormSubmit={() => {
-                setIsModalOpen(false); // Close the modal
-                refreshProjects(); // Refresh the projects list
-              }}
-              id={user.id} // Pass the user id to the form
-            />
-          )}
+          <Form
+            onFormSubmit={() => {
+              setIsModalOpen(false); // Close the modal
+              refreshProjects(); // Refresh the projects list
+            }}
+            id={user.id}
+          />
         </ModalBox>
       </div>
       <div className="p-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div key={project.project_id}>
+          {projects && projects.map((project, index) => (
+            <div key={index}>
               <Link href={`/dashboard/${project.project_id}`}>
                 <ProjectCard
                   title={project.project_name}
