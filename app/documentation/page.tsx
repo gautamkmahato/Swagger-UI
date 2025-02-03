@@ -4,16 +4,21 @@ import { useEffect, useState } from 'react'
 import Test from '../_components/Test'
 import fetchJsonData from '../actions/fetchJsonData'
 
-interface DocumentationProps {
-    docId: string
+// Props interface
+interface PageProps {
+    params: {
+        docId: string
+    }
+    searchParams: { [key: string]: string | string[] | undefined }
 }
 
 interface JsonDataResponse {
     openapi_schema: string
-    [key: string]: any  // for any other properties in the response
+    [key: string]: any
 }
 
-export default function Documentation({ docId }: DocumentationProps) {
+export default function Documentation({ params }: PageProps) {
+    const { docId } = params
     const [checkDocIdStatus, setCheckDocIdStatus] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>('')
@@ -21,7 +26,6 @@ export default function Documentation({ docId }: DocumentationProps) {
 
     useEffect(() => {
         async function getJsonData() {
-            // call the fetchJsonData function to check if the docId has jsonData or not
             setLoading(true)
             const jsonData = await fetchJsonData(docId) as JsonDataResponse[]
             
