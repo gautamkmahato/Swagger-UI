@@ -1,34 +1,40 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Test from '../_components/Test';
-import fetchJsonData from '../actions/fetchJsonData';
+import Test from '../_components/Test'
+import fetchJsonData from '../actions/fetchJsonData'
 
-export default function Documentation({ docId }: {docId: string}) {
-    const [checkDocIdStatus, setCheckDocIdStatus] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [apiData, setApiData] = useState('');
+interface PageProps {
+    params: { docId: string }
+    searchParams?: { [key: string]: string | string[] | undefined }
+}
+
+export default function Documentation({ params }: PageProps) {
+    const { docId } = params
+    const [checkDocIdStatus, setCheckDocIdStatus] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [apiData, setApiData] = useState('')
+
     useEffect(() => {
         async function getJsonData() {
             // call the fetchJsonData function to check if the docId has jsonData or not
-            setLoading(true);
-            const jsonData = await fetchJsonData(docId);
-            if(jsonData[0].openapi_schema){
-                setCheckDocIdStatus(true);
-                setLoading(false);
-                setApiData(jsonData[0].openapi_schema);
-            } else{
+            setLoading(true)
+            const jsonData = await fetchJsonData(docId)
+            if (jsonData[0].openapi_schema) {
+                setCheckDocIdStatus(true)
+                setLoading(false)
+                setApiData(jsonData[0].openapi_schema)
+            } else {
                 setErrorMessage(`Please upload the JSON data:`)
-                setLoading(false);
-
+                setLoading(false)
             }
         }
-        getJsonData();
-    }, [docId]);
+        getJsonData()
+    }, [docId])
 
-    if(loading){
-        return(
+    if (loading) {
+        return (
             <>
                 <h1>Loading...</h1>
             </>
