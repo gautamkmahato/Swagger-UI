@@ -2,7 +2,7 @@
 
 export default async function fetchDocumentationByProjectId(projectId){
     console.log("projectId", projectId)
-    const response = await fetch(`http://localhost:5000/api/v1/documentations/${projectId}`);
+    const response = await fetch(`https://written-karly-gkmnanu-a85fa9c6.koyeb.app/api/v1/documentations/${projectId}`);
     const result = await response.json();
 
     console.log(result)

@@ -2,7 +2,7 @@
 'use server'
 
 export default async function createNewDocumentation(inputData: unknown){
-    const response = await fetch('http:localhost:5000/api/v1/documentations/add', {
+    const response = await fetch('https://written-karly-gkmnanu-a85fa9c6.koyeb.app/api/v1/documentations/add', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

@@ -1,7 +1,7 @@
 'use server'
 
 export default async function createNewUser(inputData: unknown){
-    const response = await fetch('http://localhost:5000/api/v1/user', {
+    const response = await fetch('https://written-karly-gkmnanu-a85fa9c6.koyeb.app/api/v1/user', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

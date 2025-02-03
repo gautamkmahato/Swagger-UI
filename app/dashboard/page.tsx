@@ -60,10 +60,6 @@ export default function ProjectsPage() {
     return <h1>Loading...</h1>;
   }
 
-  if (!isLoaded) {
-    return <div>Loading...</div>
-  }
-
   if (!isSignedIn) {
     return <div>Sign in to view this page</div>
   }

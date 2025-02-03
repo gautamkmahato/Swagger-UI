@@ -2,7 +2,7 @@
 
 export default async function uploadJsonData(apiData: unknown, docId){
     console.log(apiData)
-    const response = await fetch(`http://localhost:5000/api/v1/documentations/${docId}/add/schema`, {
+    const response = await fetch(`https://written-karly-gkmnanu-a85fa9c6.koyeb.app/api/v1/documentations/${docId}/add/schema`, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

@@ -1,7 +1,7 @@
 'use server'
 
 export default async function convertToOpenApiSchema(inputData: unknown){
-    const response = await fetch('http://localhost:5000/convert/openapi', {
+    const response = await fetch('https://written-karly-gkmnanu-a85fa9c6.koyeb.app/convert/openapi', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
