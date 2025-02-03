@@ -3,16 +3,17 @@
 import { useState } from 'react';
 import createNewProject from '@/app/actions/createNewProject';
 
-export default function Form({ onFormSubmit }) {
+
+export default function Form({ onFormSubmit, id }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e) => { 
     e.preventDefault();
     const inputData = {
       project_name: name,
       description: description,
-      user_id: 1,
+      user_id: id,
     };
 
     try {
@@ -26,6 +27,8 @@ export default function Form({ onFormSubmit }) {
       console.error('Error:', error);
     }
   };
+
+  
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">

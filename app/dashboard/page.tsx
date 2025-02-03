@@ -6,6 +6,7 @@ import Form from './_components/ProjectForm';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import fetchProjects from '../actions/fetchProjects';
+import { useUser } from '@clerk/nextjs';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState([]);
@@ -13,12 +14,16 @@ export default function ProjectsPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const { isSignedIn, user, isLoaded } = useUser();
+
+  console.log(user)
+
   // Fetch projects on component mount
   useEffect(() => {
     async function getAllProjects() {
       setLoading(true);
       try {
-        const result = await fetchProjects();
+        const result = await fetchProjects(user.id);
         console.log(result)
         if (result) {
           setProjects(result);
@@ -38,7 +43,7 @@ export default function ProjectsPage() {
   const refreshProjects = async () => {
     setLoading(true);
     try {
-      const result = await fetchProjects();
+      const result = await fetchProjects(user.id);
       if (result) {
         setProjects(result);
       } else {
@@ -53,6 +58,14 @@ export default function ProjectsPage() {
 
   if (loading) {
     return <h1>Loading...</h1>;
+  }
+
+  if (!isLoaded) {
+    return <div>Loading...</div>
+  }
+
+  if (!isSignedIn) {
+    return <div>Sign in to view this page</div>
   }
 
   return (
@@ -70,6 +83,7 @@ export default function ProjectsPage() {
               setIsModalOpen(false); // Close the modal
               refreshProjects(); // Refresh the projects list
             }}
+            id={user.id}
           />
         </ModalBox>
       </div>
