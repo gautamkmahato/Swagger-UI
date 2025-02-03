@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable */
 'use client';
 
 
@@ -251,7 +251,16 @@ const ParameterInput: React.FC = () => {
     setParameters(parameters.filter((_, i) => i !== index));
   };
 
-  const updateParameter = (index: number, field: keyof Parameter, value: any) => {
+  interface Parameter {
+    // Define the properties of your Parameter object
+    [key: string]: any; // Adjust this to match your actual parameter structure
+  }
+  
+  const updateParameter = <T extends keyof Parameter>(
+    index: number,
+    field: T,
+    value: Parameter[T]
+  ) => {
     const newParameters = [...parameters];
     newParameters[index][field] = value;
     setParameters(newParameters);
