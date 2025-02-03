@@ -14,5 +14,5 @@ export default async function Page() {
   console.log(user)
 
   // Use `user` to render user details or create UI elements
-  return <div>Welcome, {user.firstName}!</div>
+  return <div>Welcome, {user?.firstName}!</div>
 }

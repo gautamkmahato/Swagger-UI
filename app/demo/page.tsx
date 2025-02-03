@@ -3,6 +3,6 @@ import Sandbox from '../_components/Sandbox'
 
 export default function page() {
     return (
-        <Sandbox />
+        <h1>Demo</h1>
     )
 }
