@@ -3,12 +3,17 @@
 import createNewDocumentation from "@/app/actions/createNewDocumentation";
 import { useState } from "react";
 
+// Define props type for DocumentationForm component
+interface DocumentationFormProps {
+  onFormSubmit: () => void;
+  project_id: string;
+}
 
-export default function DocumentationForm({ onFormSubmit, project_id }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+export default function DocumentationForm({ onFormSubmit, project_id }: DocumentationFormProps) {
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const inputData = {
         title: title,

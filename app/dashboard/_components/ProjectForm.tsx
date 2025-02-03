@@ -1,14 +1,17 @@
-'use client';
-
 import { useState } from 'react';
 import createNewProject from '@/app/actions/createNewProject';
 
+// Define the types for the props
+interface FormProps {
+  onFormSubmit: () => void;
+  id: string; // Assuming `id` is a string, update this type if it's a different type (like number)
+}
 
-export default function Form({ onFormSubmit, id }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+export default function Form({ onFormSubmit, id }: FormProps) {
+  const [name, setName] = useState<string>(''); // Type the state variables
+  const [description, setDescription] = useState<string>(''); // Type the state variables
 
-  const handleFormSubmit = async (e) => { 
+  const handleFormSubmit = async (e: React.FormEvent) => { 
     e.preventDefault();
     const inputData = {
       project_name: name,
@@ -27,8 +30,6 @@ export default function Form({ onFormSubmit, id }) {
       console.error('Error:', error);
     }
   };
-
-  
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">

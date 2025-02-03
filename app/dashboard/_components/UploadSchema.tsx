@@ -1,42 +1,54 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import Test from '../../_components/Test';
 import uploadJsonData from '@/app/actions/uploadJsonData';
 
-export default function UploadSchema({ docId }) {
-  const [file, setFile] = useState(null);
-  const [inputText, setInputText] = useState('');
-  const [fileContent, setFileContent] = useState(null);
-  const [apiData, setApiData] = useState(null);
-  const [uploadMethod, setUploadMethod] = useState('file');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false)
+interface UploadSchemaProps {
+  docId: string;
+}
 
+interface ApiResponse {
+  ans: any; // Replace `any` with the actual type of the response if known
+}
 
-  const handleFileUpload = async (e) => {
+export default function UploadSchema({ docId }: UploadSchemaProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [inputText, setInputText] = useState<string>('');
+  const [fileContent, setFileContent] = useState<any | null>(null);
+  const [apiData, setApiData] = useState<any | null>(null);
+  const [uploadMethod, setUploadMethod] = useState<'file' | 'text'>('file');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleFileUpload = async (e: FormEvent) => {
     e.preventDefault();
+    if (!file && uploadMethod === 'file') {
+      setError('Please select a file');
+      return;
+    }
+    
     try {
-      const text = uploadMethod === 'file' ? await file.text() : inputText;
+      const text = uploadMethod === 'file' && file ? await file.text() : inputText;
       const data = JSON.parse(text);
 
       const response = await fetch('http://localhost:5000/convert', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Ensure this is set
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.details)
+        setError(errorData.details);
         throw new Error(errorData.details || 'Error processing request');
       }
 
-      const { ans } = await response.json();
+      const { ans }: ApiResponse = await response.json();
       setFileContent(ans);
-      console.log(ans)
+      console.log(ans);
     } catch (error) {
       console.error('Error processing input:', error);
       setFileContent(null);
@@ -48,16 +60,14 @@ export default function UploadSchema({ docId }) {
 
     const result = await uploadJsonData(fileContent, docId);
 
-    if(result){
-        fileContent ? setApiData(fileContent) : alert('Please upload or paste JSON first');
-        setLoading(false);
-    } else{
-        console.log(`Something went wrong in uploading apiData to Database:`);
-        setLoading(false)
+    if (result) {
+      fileContent ? setApiData(fileContent) : alert('Please upload or paste JSON first');
+      setLoading(false);
+    } else {
+      console.log('Something went wrong in uploading apiData to Database');
+      setLoading(false);
     }
-
   };
-
 
   return (
     <>
@@ -84,7 +94,7 @@ export default function UploadSchema({ docId }) {
               <input
                 type="file"
                 accept=".json"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setFile(e.target.files ? e.target.files[0] : null)}
                 className="w-full p-2 border rounded mb-4"
               />
               <button
@@ -99,7 +109,7 @@ export default function UploadSchema({ docId }) {
             <div className="mb-6">
               <textarea
                 value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInputText(e.target.value)}
                 placeholder="Paste your JSON here"
                 rows={6}
                 className="w-full p-2 border rounded mb-4"
