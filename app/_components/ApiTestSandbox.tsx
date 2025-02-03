@@ -3,18 +3,30 @@
 import { useState } from 'react';
 import { Send, Plus, X, Check, Code, Cookie, Lock, Globe } from 'lucide-react';
 
-const TabPanel = ({ children, isActive }) => (
+// TabPanel component with proper types for props
+interface TabPanelProps {
+  children: React.ReactNode;
+  isActive: boolean;
+}
+
+const TabPanel = ({ children, isActive }: TabPanelProps) => (
   <div className={`${isActive ? 'block' : 'hidden'} w-full`}>
     {children}
   </div>
 );
 
+// Header Component with proper types
+interface Header {
+  key: string;
+  value: string;
+}
+
 const HeadersComponent = () => {
-  const [headers, setHeaders] = useState([{ key: '', value: '' }]);
+  const [headers, setHeaders] = useState<Header[]>([{ key: '', value: '' }]);
 
   const addHeader = () => setHeaders([...headers, { key: '', value: '' }]);
-  const removeHeader = (index) => setHeaders(headers.filter((_, i) => i !== index));
-  const updateHeader = (index, field, value) => {
+  const removeHeader = (index: number) => setHeaders(headers.filter((_, i) => i !== index));
+  const updateHeader = (index: number, field: 'key' | 'value', value: string) => {
     const newHeaders = [...headers];
     newHeaders[index] = { ...newHeaders[index], [field]: value };
     setHeaders(newHeaders);
@@ -59,9 +71,12 @@ const HeadersComponent = () => {
   );
 };
 
+// Body Component with proper types
+type BodyType = 'none' | 'json' | 'xml' | 'form';
+
 const BodyComponent = () => {
-  const [bodyType, setBodyType] = useState('none');
-  const [bodyContent, setBodyContent] = useState('');
+  const [bodyType, setBodyType] = useState<BodyType>('none');
+  const [bodyContent, setBodyContent] = useState<string>('');
 
   const bodyTypes = [
     { id: 'none', label: 'None' },
@@ -77,7 +92,7 @@ const BodyComponent = () => {
           {bodyTypes.map(({ id, label }) => (
             <button
               key={id}
-              onClick={() => setBodyType(id)}
+              onClick={() => setBodyType(id as BodyType)}
               className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
                 bodyType === id
                   ? 'border-blue-600 text-blue-600'
@@ -101,11 +116,18 @@ const BodyComponent = () => {
   );
 };
 
-const ApiTestSandbox = () => {
-  const [url, setUrl] = useState('');
-  const [activeTab, setActiveTab] = useState('headers');
+// Main Component with proper types for state
+interface Tab {
+  id: string;
+  label: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
 
-  const tabs = [
+const ApiTestSandbox = () => {
+  const [url, setUrl] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<string>('headers');
+
+  const tabs: Tab[] = [
     { id: 'headers', label: 'Headers', icon: Globe },
     { id: 'body', label: 'Body', icon: Code },
     { id: 'cookies', label: 'Cookies', icon: Cookie },

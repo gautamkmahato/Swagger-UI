@@ -3,25 +3,18 @@
 import { useState } from 'react';
 import { Send, Copy, FileJson, ArrowLeftRight, Key, Globe } from 'lucide-react';
 
-export default function Sandbox({ url, activePath, activeMethod, input }) {
-  // const input = {
-  //   "openapi": "3.0.0",
-  //   "info": {
-  //     "title": "Rates and Transit Times API",
-  //     "version": "1.0.0"
-  //   },
-  //   "servers": [
-  //     {
-  //       "url": "/"
-  //     }
-  //   ],
-  //   "paths": {}
-  // };
+interface SandboxProps {
+  url: string;
+  activePath: string;
+  activeMethod: string;
+  input: Record<string, any>;
+}
 
-  const [inputData, setInputData] = useState(input);
-  const [output, setOutput] = useState({});
-  const [apiKey, setApiKey] = useState('');
-  const [authorizationToken, setAuthorizationToken] = useState('');
+export default function Sandbox({ url, activePath, activeMethod, input }: SandboxProps) {
+  const [inputData, setInputData] = useState<Record<string, any>>(input);
+  const [output, setOutput] = useState<Record<string, any>>({});
+  const [apiKey, setApiKey] = useState<string>('');
+  const [authorizationToken, setAuthorizationToken] = useState<string>('');
 
   const handleSubmit = () => {
     console.log(apiKey);
@@ -31,83 +24,83 @@ export default function Sandbox({ url, activePath, activeMethod, input }) {
     <div className="w-full max-w-6xl bg-white rounded-xl shadow-lg mx-auto p-6 h-screen flex flex-col gap-4">
       {/* Top Section */}
       <div className="overflow-hidden">
-      <div className="p-4 bg-gray-50 border-b border-gray-200">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 font-medium text-gray-700 w-full sm:w-auto">
-            {activeMethod}
-          </div>
-          <div className="flex-1">
-            <div className="w-full px-4 py-2 bg-white rounded-lg border border-gray-200 text-gray-700 flex items-center gap-2">
-              <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <span className="flex-1 truncate">
-                {`https://api.sandbox.com${activePath}`}
-              </span>
+        <div className="p-4 bg-gray-50 border-b border-gray-200">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 font-medium text-gray-700 w-full sm:w-auto">
+              {activeMethod}
             </div>
-          </div>
-          <button 
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto"
-          >
-            <Send className="w-4 h-4" />
-            Send
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div className="bg-white rounded-lg p-4 shadow-sm">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column - Auth Tokens */}
-        <div className="space-y-4">
-          {/* Authorization Token Input */}
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-2">
-              <Key className="w-4 h-4 text-gray-500" />
-              <label className="text-sm font-medium text-gray-600">Authorization Token</label>
+            <div className="flex-1">
+              <div className="w-full px-4 py-2 bg-white rounded-lg border border-gray-200 text-gray-700 flex items-center gap-2">
+                <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <span className="flex-1 truncate">
+                  {`https://api.sandbox.com${activePath}`}
+                </span>
+              </div>
             </div>
-            <input
-              type="text"
-              value={authorizationToken}
-              onChange={(e) => setAuthorizationToken(e.target.value)}
-              placeholder="Enter authorization token"
-              className="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* API Key Input */}
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-2">
-              <Key className="w-4 h-4 text-gray-500" />
-              <label className="text-sm font-medium text-gray-600">API Key</label>
-            </div>
-            <input
-              type="text"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter API key"
-              className="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        {/* Right Column - Schema Selector at top with space below */}
-        <div className="space-y-4">
-          {/* Schema Selector */}
-          <div className="w-full lg:w-64">
-            <label className="block text-sm font-medium text-gray-600 mb-2">Schema</label>
-            <select className="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-              <option>Full Schema</option>
-              <option>Minimum Sample Payload</option>
-            </select>
-          </div>
-          
-          {/* Empty space for future content */}
-          <div className="flex-1">
-            {/* Future elements can be added here */}
+            <button 
+              onClick={handleSubmit}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto"
+            >
+              <Send className="w-4 h-4" />
+              Send
+            </button>
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column - Auth Tokens */}
+          <div className="space-y-4">
+            {/* Authorization Token Input */}
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center gap-2">
+                <Key className="w-4 h-4 text-gray-500" />
+                <label className="text-sm font-medium text-gray-600">Authorization Token</label>
+              </div>
+              <input
+                type="text"
+                value={authorizationToken}
+                onChange={(e) => setAuthorizationToken(e.target.value)}
+                placeholder="Enter authorization token"
+                className="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* API Key Input */}
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center gap-2">
+                <Key className="w-4 h-4 text-gray-500" />
+                <label className="text-sm font-medium text-gray-600">API Key</label>
+              </div>
+              <input
+                type="text"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="Enter API key"
+                className="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          {/* Right Column - Schema Selector at top with space below */}
+          <div className="space-y-4">
+            {/* Schema Selector */}
+            <div className="w-full lg:w-64">
+              <label className="block text-sm font-medium text-gray-600 mb-2">Schema</label>
+              <select className="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option>Full Schema</option>
+                <option>Minimum Sample Payload</option>
+              </select>
+            </div>
+            
+            {/* Empty space for future content */}
+            <div className="flex-1">
+              {/* Future elements can be added here */}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Split View */}
       <div className="flex-1 flex gap-4 min-h-0">
