@@ -7,21 +7,21 @@ import fetchJsonData from '../actions/fetchJsonData';
 
 export default function Documentation() {
     const router = useRouter();
-    const { docId } = router.query; // Extract docId from the URL query
-
     const [checkDocIdStatus, setCheckDocIdStatus] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [apiData, setApiData] = useState('');
+    
+    // Safely extract docId from router.query when it's available
+    const docId = router.query?.docId;
 
     useEffect(() => {
         if (!docId) return; // Make sure docId exists before calling the function
 
         async function getJsonData() {
-            // call the fetchJsonData function to check if the docId has jsonData or not
             setLoading(true);
             const jsonData = await fetchJsonData(docId);
-            if (jsonData[0].openapi_schema) {
+            if (jsonData[0]?.openapi_schema) {
                 setCheckDocIdStatus(true);
                 setLoading(false);
                 setApiData(jsonData[0].openapi_schema);
@@ -30,6 +30,7 @@ export default function Documentation() {
                 setLoading(false);
             }
         }
+
         getJsonData();
     }, [docId]);
 
