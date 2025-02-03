@@ -23,20 +23,17 @@ export default function ProjectsPage() {
 
   const { isSignedIn, user, isLoaded } = useUser();
 
-  console.log(user);
-
   // Fetch projects on component mount
   useEffect(() => {
     async function getAllProjects() {
-      if (!user) return;
+      if (!user || !user.id) return; // Ensure user.id is available before proceeding
       setLoading(true);
       try {
-        const result: Project[] = await fetchProjects(user.id);
-        console.log(result);
+        const result: Project[] = await fetchProjects(user.id); // Fetch projects using the authenticated user id
         if (result) {
           setProjects(result);
         } else {
-          setErrorMessage('Error in fetching Projects');
+          setErrorMessage('Error fetching Projects');
         }
       } catch (error) {
         setErrorMessage(`Error: ${(error as Error).message}`);
@@ -44,21 +41,21 @@ export default function ProjectsPage() {
         setLoading(false);
       }
     }
-    if (isLoaded) {
+    if (isLoaded && isSignedIn) {
       getAllProjects();
     }
-  }, [user, isLoaded]);
+  }, [user, isLoaded, isSignedIn]); // Depend on user, isLoaded, and isSignedIn
 
   // Function to refresh the projects list
   const refreshProjects = async () => {
-    if (!user) return;
+    if (!user || !user.id) return; // Ensure user.id is available before proceeding
     setLoading(true);
     try {
-      const result: Project[] = await fetchProjects(user.id);
+      const result: Project[] = await fetchProjects(user.id); // Fetch projects using the authenticated user id
       if (result) {
         setProjects(result);
       } else {
-        setErrorMessage('Error in fetching Projects');
+        setErrorMessage('Error fetching Projects');
       }
     } catch (error) {
       setErrorMessage(`Error: ${(error as Error).message}`);
@@ -72,7 +69,7 @@ export default function ProjectsPage() {
   }
 
   if (!isSignedIn) {
-    return <div>Sign in to view this page</div>;
+    return <div>Please sign in to view this page</div>;
   }
 
   return (
@@ -91,7 +88,7 @@ export default function ProjectsPage() {
                 setIsModalOpen(false); // Close the modal
                 refreshProjects(); // Refresh the projects list
               }}
-              id={user.id}
+              id={user.id} // Pass the user id to the form
             />
           )}
         </ModalBox>
