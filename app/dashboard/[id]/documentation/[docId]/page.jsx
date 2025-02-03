@@ -15,7 +15,7 @@ export default function DocumentationPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [apiData, setApiData] = useState('');
 
-    const params = useParams<{ docId: any }>();
+    const params = useParams();
     const docId = params.docId;
     console.log(params);
 
